@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRM.Shared", "src\BuildingBlocks\CRM.Shared\CRM.Shared.csproj", "{97D2719C-1A02-4A1F-ABC9-7FAB3B15616B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRM.Migration", "src\BuildingBlocks\CRM.Migration\CRM.Migration.csproj", "{3722D08E-0DE7-4421-A7B1-0D6EE2B3953D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRM.Migration", "src\Migration\CRM.Migration\CRM.Migration.csproj", "{3722D08E-0DE7-4421-A7B1-0D6EE2B3953D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Communication", "Communication", "{D280FFAF-A055-484F-A427-181F1FED1589}"
 EndProject

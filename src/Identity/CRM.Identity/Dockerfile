@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100-bionic AS builder
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS builder
 
 ARG feed='--source "https://api.nuget.org/v3/index.json"'
 
@@ -16,7 +16,7 @@ COPY ["src/BuildingBlocks/CRM.Metrics/.", "src/BuildingBlocks/CRM.Metrics/"]
 COPY ["src/Identity/CRM.Identity/.", "src/Identity/CRM.Identity/"]
 RUN dotnet publish src/Identity/CRM.Identity/ -c Release -o /app --no-restore
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.0-bionic
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1
 WORKDIR /app
 
 ENV ASPNETCORE_URLS http://*:80

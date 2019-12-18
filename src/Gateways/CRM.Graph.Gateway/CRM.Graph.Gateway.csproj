@@ -1,27 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>CRM.Graph.Gateway</AssemblyName>
     <RootNamespace>CRM.Graph.Gateway</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'GraphQL-gateway' ">
+    <StartAction>Project</StartAction>
+    <LaunchBrowser></LaunchBrowser>
+  </PropertyGroup>
   <ItemGroup>
-    <Protobuf Include="..\..\proto\crm\contact\v1\contact.proto"/>
-    <Protobuf Include="..\..\proto\crm\contact\v1\contact_api.proto"/>
+    <Protobuf Include="..\..\proto\crm\contact\v1\contact.proto" />
+    <Protobuf Include="..\..\proto\crm\contact\v1\contact_api.proto" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.9.2"/>
-    <PackageReference Include="Grpc.Tools" Version="2.23.0"/>
+    <PackageReference Include="Google.Protobuf" Version="3.11.2" />
+    <PackageReference Include="Grpc.Tools" Version="2.25.0"><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+<PrivateAssets>all</PrivateAssets>
+</PackageReference>
     <PackageReference Include="Scrutor" Version="3.1.0" />
-    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.23.2" />
-    <PackageReference Include="HotChocolate" Version="10.1.0" />
-    <PackageReference Include="HotChocolate.AspNetCore" Version="10.1.0" />
-    <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="10.1.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.0.0"/>
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.25.0" />
+    <PackageReference Include="HotChocolate" Version="10.2.0" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="10.2.0" />
+    <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="10.2.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\CRM.Shared\CRM.Shared.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\CRM.Tracing.Jaeger\CRM.Tracing.Jaeger.csproj" />
-    <ProjectReference Include="..\..\BuildingBlocks\CRM.Metrics\CRM.Metrics.csproj"/>
+    <ProjectReference Include="..\..\BuildingBlocks\CRM.Metrics\CRM.Metrics.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services" />

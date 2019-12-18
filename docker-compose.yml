@@ -70,11 +70,11 @@ services:
     image: ${REGISTRY:-crmnow}/contact-migration:${TAG:-latest}
     build:
       context: .
-      dockerfile: src/BuildingBlocks/CRM.Migration/Dockerfile
+      dockerfile: src/Migration/CRM.Migration/Dockerfile
       args:
         - feed=${NUGET_FEED:- --source "https://api.nuget.org/v3/index.json"}
     volumes:
-      - ./src/BuildingBlocks/CRM.Migration/Scripts/:/app/Scripts:ro
+      - ./src/Migration/CRM.Migration/Scripts/:/app/Scripts:ro
     networks:
       - crm
     depends_on:
@@ -98,11 +98,11 @@ services:
     image: ${REGISTRY:-crmnow}/identity-migration:${TAG:-latest}
     build:
       context: .
-      dockerfile: src/BuildingBlocks/CRM.Migration/Dockerfile
+      dockerfile: src/Migration/CRM.Migration/Dockerfile
       args:
         - feed=${NUGET_FEED:- --source "https://api.nuget.org/v3/index.json"}
     volumes:
-      - ./src/BuildingBlocks/CRM.Migration/Scripts/:/app/Scripts:ro
+      - ./src/Migration/CRM.Migration/Scripts/:/app/Scripts:ro
     networks:
       - crm
     depends_on:

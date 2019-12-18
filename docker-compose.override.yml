@@ -57,7 +57,8 @@ services:
       - Jaeger__UdpHost=jaeger
       - ConnectionStrings__contact=Server=postgresql;Port=5432;Database=crm-contact;User Id=lab;Password=P@ssw0rd;
       - rabbitMQ__Url=rabbitmq://rabbitmq
-      - Logging__Seq__Enabled=false
+      - Logging__Loki__Enabled=false
+      - Logging__Seq__Enabled=${SEQ__ENABLED:-false}
       - Logging__Seq__Url=http://seq/
       - Logging__Seq__ApiKey=${SEQ_KEY:-}
       - metrics__enabled=true
@@ -80,7 +81,8 @@ services:
       - Jaeger__Enabled=true
       - Jaeger__UdpHost=jaeger
       - ConnectionStrings__identity=Server=postgresql;Port=5432;Database=crm-identity;User Id=lab;Password=P@ssw0rd;
-      - Logging__Seq__Enabled=false
+      - Logging__Loki__Enabled=false
+      - Logging__Seq__Enabled=${SEQ__ENABLED:-false}
       - Logging__Seq__Url=http://seq/
       - Logging__Seq__ApiKey=${SEQ_KEY:-}
       - metrics__enabled=true
@@ -103,7 +105,8 @@ services:
       - Jaeger__UdpHost=jaeger
       - Jaeger__Enabled=true
       - rabbitMQ__Url=rabbitmq://rabbitmq
-      - Logging__Seq__Enabled=false
+      - Logging__Loki__Enabled=false
+      - Logging__Seq__Enabled=${SEQ__ENABLED:-false}
       - Logging__Seq__Url=http://seq/
       - Logging__Seq__ApiKey=${SEQ_KEY:-}
       - metrics__enabled=true
@@ -124,7 +127,8 @@ services:
       - Services__ContactService__Url=http://contact-api:15001
       - Jaeger__Enabled=true
       - Cors__Origins=http://localhost:5102
-      - Logging__Seq__Enabled=false
+      - Logging__Loki__Enabled=false
+      - Logging__Seq__Enabled=${SEQ__ENABLED:-false}
       - Logging__Seq__Url=http://seq/
       - Logging__Seq__ApiKey=${SEQ_KEY:-}s
       - metrics__enabled=true

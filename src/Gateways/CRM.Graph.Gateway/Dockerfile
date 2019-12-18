@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100-bionic AS builder
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS builder
 
 ARG feed='--source "https://api.nuget.org/v3/index.json"'
 
@@ -22,7 +22,7 @@ COPY ["src/Gateways/CRM.Graph.Gateway/.", "src/Gateways/CRM.Graph.Gateway/"]
 
 RUN dotnet publish src/Gateways/CRM.Graph.Gateway/ -c Release -o /app --no-restore
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.0-bionic
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1
 WORKDIR /app
 
 ENV ASPNETCORE_URLS http://*:80

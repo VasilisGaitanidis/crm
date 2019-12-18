@@ -5,7 +5,7 @@
     <RootNamespace>CRM.Communication</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="2.3.1" />
+    <PackageReference Include="MailKit" Version="2.4.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\CRM.Shared\CRM.Shared.csproj" />

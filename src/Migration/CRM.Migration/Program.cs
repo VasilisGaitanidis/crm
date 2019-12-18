@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using CRM.Migration;
 using DbUp;
 using DbUp.Engine;
+using DbUp.Support;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 
@@ -61,15 +63,16 @@ namespace crm.migration
 
             EnsureDatabase.For.PostgresqlDatabase(connString);
 
-            var upgrader = DeployChanges.To
+            var upgradeBuilder = DeployChanges.To
                 .PostgresqlDatabase(connString)
-                .WithScriptsFromFileSystem(scriptFolderPath, new SqlScriptOptions
-                {
-                    RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder + 1
-                })
-                .LogToAutodetectedLog()
-                .Build();
+                .WithScriptsFromFileSystem(Path.Combine(scriptFolderPath, "Scripts"), new SqlScriptOptions { RunGroupOrder = 1, ScriptType = ScriptType.RunOnce })
+                .WithScriptsFromFileSystem(Path.Combine(scriptFolderPath, "SeedData"), new SqlScriptOptions { RunGroupOrder = 2, ScriptType = ScriptType.RunOnce });
 
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                upgradeBuilder.WithScriptsFromFileSystem(Path.Combine(scriptFolderPath, "SampleData"), new SqlScriptOptions { RunGroupOrder = 3, ScriptType = ScriptType.RunOnce });
+            }
+            var upgrader = upgradeBuilder.LogToAutodetectedLog().Build();
             upgrader.PerformUpgrade();
         }
 

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100-bionic AS builder
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS builder
 
 ARG feed='--source "https://api.nuget.org/v3/index.json"'
 
@@ -31,7 +31,7 @@ RUN dotnet publish src/Contact/CRM.Contact.Api/ -c Release -o /app --no-restore
 FROM builder AS functionaltest
 WORKDIR /src/src/Contact/CRM.Contact.FunctionalTests
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.0-bionic
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1
 WORKDIR /app
 
 ENV ASPNETCORE_ENVIRONMENT docker

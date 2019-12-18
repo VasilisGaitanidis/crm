@@ -11,7 +11,7 @@ trigger:
       - ref/tags/*
   paths:
     include:
-      - src/BuildingBlocks/CRM.Migration
+      - src/Migration/CRM.Migration
 
 stages:
 
@@ -35,7 +35,7 @@ stages:
           inputs:
             command: build
             repository: crmnow/db-migration
-            Dockerfile: src/BuildingBlocks/CRM.Migration/Dockerfile
+            Dockerfile: src/Migration/CRM.Migration/Dockerfile
             buildContext: .
             tags: |
               latest
@@ -46,7 +46,7 @@ stages:
           inputs:
             command: buildAndPush
             repository: crmnow/db-migration
-            Dockerfile: src/BuildingBlocks/CRM.Migration/Dockerfile
+            Dockerfile: src/Migration/CRM.Migration/Dockerfile
             buildContext: .
             tags: |
               latest
