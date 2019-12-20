@@ -1,24 +1,27 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using CRM.Contact.Queries;
+using CRM.Protobuf.Contacts.V1;
+using MediatR;
 
 namespace CRM.Contact.GraphType
 {
     public class Query
     {
-        private readonly ContactContext _context;
-
-        public Query(ContactContext context)
+        private readonly IMediator _mediator;
+        public Query(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
-        public async Task<IEnumerable<Domain.Contact>> GetContacts()
+        public async Task<IEnumerable<ContactDto>> GetContacts()
         {
-             var contacts = await _context.Contacts
-                .AsNoTracking()
-                .ToListAsync();
-                
-            return contacts;
+            return await _mediator.Send(new FindAllContactsQuery());
+        }
+
+        public async Task<ContactDto> GetContactById(Guid contactId)
+        {
+            return await _mediator.Send(new FindContactByIdQuery(contactId));
         }
     }
 }

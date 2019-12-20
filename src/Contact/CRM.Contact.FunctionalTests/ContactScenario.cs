@@ -1,11 +1,7 @@
 using Xunit;
-using System.Threading.Tasks;
-using Google.Protobuf.WellKnownTypes;
-using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using CRM.Protobuf.Contacts.V1;
 using CRM.Contact.Api;
 
 namespace CRM.Contact.FunctionalTests
@@ -29,21 +25,21 @@ namespace CRM.Contact.FunctionalTests
             });
         }
 
-        [Fact]
-        public async Task Call_ping_and_return_pong()
-        {
-            GrpcChannelOptions options = new GrpcChannelOptions()
-            {
-                HttpClient = _factory.CreateClient()
-            };
-            var channel = GrpcChannel.ForAddress("http://localhost", options);
-            var client = new LeadApi.LeadApiClient(channel);
+        // [Fact]
+        // public async Task Call_ping_and_return_pong()
+        // {
+        //     GrpcChannelOptions options = new GrpcChannelOptions()
+        //     {
+        //         HttpClient = _factory.CreateClient()
+        //     };
+        //     var channel = GrpcChannel.ForAddress("http://localhost", options);
+        //     var client = new LeadApi.LeadApiClient(channel);
 
-            var result = await client.PingAsync(new Empty());
+        //     var result = await client.PingAsync(new Empty());
 
-            Assert.NotNull(result);
-            Assert.Equal("Pong", result.Message);
-        }
+        //     Assert.NotNull(result);
+        //     Assert.Equal("Pong", result.Message);
+        // }
     }
 }
 

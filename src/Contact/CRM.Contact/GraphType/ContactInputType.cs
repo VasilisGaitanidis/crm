@@ -1,7 +1,7 @@
 using CRM.Protobuf.Contacts.V1;
 using HotChocolate.Types;
 
-namespace CRM.Graph.Gateway.Types
+namespace CRM.Contact.GraphType
 {
     public class ContactInputType : InputObjectType<CreateContactRequest>
     {

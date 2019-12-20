@@ -6,8 +6,12 @@ namespace CRM.Contact.GraphType
     {
         protected override void Configure(IObjectTypeDescriptor<Query> descriptor)
         {
-            descriptor.Field(t => t.GetContacts())
-                .Type<NonNullType<ListType<ContactType>>>();
+            descriptor.Field(t => t.GetContacts()).Type<NonNullType<ListType<ContactType>>>();
+
+            descriptor.Field(t => t.GetContactById(default))
+                .Name("contactById")
+                .Type<ContactType>()
+                .Argument("contactId", x => x.Type<UuidType>());
         }
     }
 }

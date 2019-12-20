@@ -86,7 +86,6 @@ namespace CRM.Contact.Api
                 {
                     // Communication with gRPC endpoints must be made through a gRPC client.
                     // To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909
-                    endpoints.MapGrpcService<LeadService>();
                     endpoints.MapGrpcService<ContactService>();
 
                     endpoints.MapHealthChecks("/health");
@@ -197,7 +196,7 @@ namespace CRM.Contact.Api
             {
                 c.RegisterServiceProvider(sp);
                 c.RegisterQueryType<QueryType>();
-                // c.RegisterMutationType<MutationType>();
+                c.RegisterMutationType<MutationType>();
             }), new QueryExecutionOptions
             {
                 IncludeExceptionDetails = true,

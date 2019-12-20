@@ -8,15 +8,8 @@ import "contact.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
 
-service LeadApi {
-  rpc Ping (google.protobuf.Empty) returns (PongReply);
-}
-
 service ContactApi {
-  rpc CreateContact(CreateContactRequest) returns (CreateContactResponse);
-  rpc UploadPhoto(UploadPhotoRequest) returns (BooleanResponse);
-  rpc ListContacts(google.protobuf.Empty) returns (ListContactsResponse);
-  rpc GetContact(GetContactRequest) returns (Contact);
+  rpc Ping (google.protobuf.Empty) returns (PongReply);
 }
 
 message GetContactRequest {
@@ -24,15 +17,15 @@ message GetContactRequest {
 }
 
 message GetContactResponse {
-  Contact contact = 1;
+  ContactDto contact = 1;
 }
 
 message ListContactsResponse {
-  repeated Contact contacts = 1;
+  repeated ContactDto contacts = 1;
 }
 
 message CreateContactResponse {
-  Contact contact = 1;
+  ContactDto contact = 1;
 }
 
 message CreateContactRequest {

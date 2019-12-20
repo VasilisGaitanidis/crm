@@ -22,7 +22,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using OpenTracing.Contrib.Grpc.Interceptors;
 using static CRM.Protobuf.Contacts.V1.ContactApi;
-using static CRM.Protobuf.Contacts.V1.LeadApi;
 
 namespace CRM.Graph.Gateway
 {
@@ -107,11 +106,6 @@ namespace CRM.Graph.Gateway
             })
             .AddInterceptor<ClientLoggerInterceptor>()
             .AddInterceptor<ClientTracingInterceptor>();
-
-            services.AddGrpcClient<LeadApiClient>(o =>
-            {
-                o.Address = new Uri(serviceOptions.ContactService.Url);
-            });
 
             return services;
         }
