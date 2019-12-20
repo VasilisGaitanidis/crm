@@ -35,7 +35,9 @@ namespace CRM.Contact.Api
                             IdentityModelEventSource.ShowPII = true;
                         }
                         options.Limits.MinRequestBodyDataRate = null;
-                        options.Listen(IPAddress.Any, 5001);
+                        options.Listen(IPAddress.Any, 5001, ListenOptions => {
+                            ListenOptions.Protocols = HttpProtocols.Http1;
+                        });
                         options.Listen(IPAddress.Any, 15001, listenOptions =>
                         {
                             listenOptions.Protocols = HttpProtocols.Http2;

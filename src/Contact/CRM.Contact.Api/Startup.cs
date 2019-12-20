@@ -26,6 +26,11 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using CRM.Contact.Services;
 using CRM.Contact.Validators;
+using HotChocolate;
+using HotChocolate.Execution.Configuration;
+using HotChocolate.AspNetCore;
+using HotChocolate.AspNetCore.Playground;
+using CRM.Contact.GraphType;
 
 namespace CRM.Contact.Api
 {
@@ -43,6 +48,7 @@ namespace CRM.Contact.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddGraphQL()
                 .AddGrpc()
                 .AddCorrelationId()
                 .AddJaeger()
@@ -67,26 +73,28 @@ namespace CRM.Contact.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCorrelationId();
-            app.UseAppMetrics();
-            app.UseRouting();
-            // app.UseAuthentication();
-            // app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                // Communication with gRPC endpoints must be made through a gRPC client.
-                // To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909
-                endpoints.MapGrpcService<LeadService>();
-                endpoints.MapGrpcService<ContactService>();
-
-                endpoints.MapHealthChecks("/health");
-
-                endpoints.MapGet("/", async context =>
+            app.UseCorrelationId()
+                .UseAppMetrics()
+                .UseGraphQL("/graphql")
+                .UsePlayground(new PlaygroundOptions()
                 {
-                    await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client");
+                    QueryPath = "/graphql",
+                    Path = "/ui/playground",
+                })
+                .UseRouting()
+                .UseEndpoints(endpoints =>
+                {
+                    // Communication with gRPC endpoints must be made through a gRPC client.
+                    // To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909
+                    endpoints.MapGrpcService<LeadService>();
+                    endpoints.MapGrpcService<ContactService>();
+
+                    endpoints.MapHealthChecks("/health");
+                    endpoints.MapGet("/", async context =>
+                    {
+                        await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client");
+                    });
                 });
-            });
         }
     }
 
@@ -180,6 +188,21 @@ namespace CRM.Contact.Api
                     });
                 });
 
+            return services;
+        }
+
+        public static IServiceCollection AddGraphQL(this IServiceCollection services)
+        {
+            services.AddGraphQL(sp => Schema.Create(c =>
+            {
+                c.RegisterServiceProvider(sp);
+                c.RegisterQueryType<QueryType>();
+                // c.RegisterMutationType<MutationType>();
+            }), new QueryExecutionOptions
+            {
+                IncludeExceptionDetails = true,
+                TracingPreference = TracingPreference.Never
+            });
             return services;
         }
     }
