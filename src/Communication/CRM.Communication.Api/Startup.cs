@@ -14,20 +14,13 @@ using CRM.MassTransit.Tracing;
 using CRM.Metrics;
 using Microsoft.AspNetCore.Http;
 using MassTransit.Context;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace CRM.Communication.Api
 {
     public class Startup
     {
         private readonly IConfiguration _configuration;
-
-        private RabbitMqOptions RabbitMqOption
-        {
-            get
-            {
-                return _configuration.GetOptions<RabbitMqOptions>("rabbitMQ");
-            }
-        }
 
         public Startup(IConfiguration configuration)
         {
@@ -38,15 +31,10 @@ namespace CRM.Communication.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddJaeger();
-            services.AddAppMetrics();
-            services.AddHealthChecks()
-                .AddRabbitMQ(RabbitMqOption.Url, name: "comnunication-rabbitmqbus-check", tags: new string[] { "rabbitmqbus" });
-
-            services.AddMassTransit(ConfigureBus, (cfg) =>
-           {
-               cfg.AddConsumersFromNamespaceContaining<ConsumerAnchor>();
-           });
+            services.AddJaeger()
+                .AddAppMetrics()
+                .AddHealthChecks(_configuration)
+                .AddMassTransit(_configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,29 +56,54 @@ namespace CRM.Communication.Api
                 });
             });
         }
+    }
 
-        private IBusControl ConfigureBus(IServiceProvider provider)
+    static class CustomExtensionsMethods
+    {
+        public static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
         {
-            MessageCorrelation.UseCorrelationId<IMessage>(x=>x.CorrelationId);
-            
-            return Bus.Factory.CreateUsingRabbitMq(cfg =>
+            var hcBuilder = services.AddHealthChecks();
+
+            hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
+
+            var rabbitMqUrl = configuration.GetOptions<RabbitMqOptions>("rabbitMQ").Url;
+            hcBuilder
+                .AddRabbitMQ(rabbitMqUrl, name: "comnunication-rabbitmqbus-check", tags: new string[] { "rabbitmqbus" });
+
+            return services;
+        }
+
+        public static IServiceCollection AddMassTransit(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddMassTransit((provider) =>
             {
-                cfg.UseSerilog();
-                var host = cfg.Host(new Uri(RabbitMqOption.Url), "/", hc =>
-                {
-                    hc.Username(RabbitMqOption.UserName);
-                    hc.Password(RabbitMqOption.Password);
-                });
+                MessageCorrelation.UseCorrelationId<IMessage>(x => x.CorrelationId);
+                var rabbitMqOption = configuration.GetOptions<RabbitMqOptions>("rabbitMQ");
 
-                cfg.ReceiveEndpoint(host, "communication", x =>
+                return Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
-                    x.Consumer<ContactCreatedConsumer>(provider);
-                    x.Consumer<ContactUpdatedConsumer>(provider);
-                });
+                    cfg.UseSerilog();
+                    var host = cfg.Host(new Uri(rabbitMqOption.Url), "/", hc =>
+                    {
+                        hc.Username(rabbitMqOption.UserName);
+                        hc.Password(rabbitMqOption.Password);
+                    });
 
-                cfg.PropagateOpenTracingContext();
-                cfg.PropagateCorrelationIdContext();
+                    cfg.ReceiveEndpoint("communication", x =>
+                    {
+                        x.Consumer<ContactCreatedConsumer>(provider);
+                        x.Consumer<ContactUpdatedConsumer>(provider);
+                    });
+
+                    cfg.PropagateOpenTracingContext();
+                    cfg.PropagateCorrelationIdContext();
+                });
+            }, (cfg) =>
+            {
+                cfg.AddConsumersFromNamespaceContaining<ConsumerAnchor>();
             });
+
+            return services;
         }
     }
 }
