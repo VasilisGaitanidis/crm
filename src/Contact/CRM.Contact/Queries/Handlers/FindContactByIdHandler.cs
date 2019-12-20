@@ -1,28 +1,28 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CRM.Contact.Extensions;
-using CRM.Dapper;
-using CRM.Shared.Repository;
-using Grpc.Core;
+using CRM.Protobuf.Contacts.V1;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRM.Contact.Queries.Handlers
 {
-    public class FindContactByIdHandler : IRequestHandler<FindContactByIdQuery, CRM.Protobuf.Contacts.V1.Contact>
+    public class FindContactByIdHandler : IRequestHandler<FindContactByIdQuery, ContactDto>
     {
-        private readonly IUnitOfWork _uow;
-        public FindContactByIdHandler(IUnitOfWork uow)
+
+        private readonly ContactContext _context;
+
+        public FindContactByIdHandler(ContactContext context)
         {
-            _uow = uow;
+            _context = context;
         }
 
-        public async Task<Protobuf.Contacts.V1.Contact> Handle(FindContactByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ContactDto> Handle(FindContactByIdQuery request, CancellationToken cancellationToken)
         {
-            var contact = await _uow.Connection.GetAsync<Domain.Contact>(request.ContactId);
-            if (contact == null)
-            {
-                throw new RpcException(new Status(StatusCode.NotFound, $"Contact with Id {request.ContactId} not found."));
-            }
+            var contact = await _context.Contacts
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.ContactId == request.ContactId);
+
             return contact.ToContactProtobuf();
         }
     }

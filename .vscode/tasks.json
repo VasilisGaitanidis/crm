@@ -12,31 +12,6 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
-        },
-        // {
-        //     "label": "publish",
-        //     "command": "dotnet",
-        //     "type": "process",
-        //     "args": [
-        //         "publish",
-        //         // "${workspaceFolder}/src/Gateways/CRM.Graph.Gateway/CRM.Graph.Gateway.csproj",
-        //         "/property:GenerateFullPaths=true",
-        //         "/consoleloggerparameters:NoSummary"
-        //     ],
-        //     "problemMatcher": "$msCompile"
-        // },
-        // {
-        //     "label": "watch",
-        //     "command": "dotnet",
-        //     "type": "process",
-        //     "args": [
-        //         "watch",
-        //         "run",
-        //         // "${workspaceFolder}/src/Gateways/CRM.Graph.Gateway/CRM.Graph.Gateway.csproj",
-        //         "/property:GenerateFullPaths=true",
-        //         "/consoleloggerparameters:NoSummary"
-        //     ],
-        //     "problemMatcher": "$msCompile"
-        // }
+        }
     ]
 }

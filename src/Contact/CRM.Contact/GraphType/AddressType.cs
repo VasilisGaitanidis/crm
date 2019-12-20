@@ -1,11 +1,11 @@
 using CRM.Protobuf.Contacts.V1;
 using HotChocolate.Types;
 
-namespace CRM.Graph.Gateway.Types.Contacts
+namespace CRM.Contact.GraphType
 {
-    public class AddressType : ObjectType<Address>
+    public class AddressType : ObjectType<StreetAddressDto>
     {
-        protected override void Configure(IObjectTypeDescriptor<Address> descriptor)
+        protected override void Configure(IObjectTypeDescriptor<StreetAddressDto> descriptor)
         {
             descriptor.Field(t => t.CalculateSize()).Ignore();
             descriptor.Field(t => t.Clone()).Ignore();

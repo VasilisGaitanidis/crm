@@ -10,7 +10,7 @@ message PongReply {
   string message = 1;
 }
 
-message Address {
+message StreetAddressDto {
   google.protobuf.StringValue street = 1;
   google.protobuf.StringValue city = 2;
   google.protobuf.StringValue state = 3;
@@ -18,14 +18,14 @@ message Address {
   google.protobuf.StringValue country = 5;
 }
 
-message ContactInformation {
+message ContactInfoDto {
   google.protobuf.StringValue email = 1;
   google.protobuf.StringValue mobile = 2;
   google.protobuf.StringValue workPhone = 3;
   google.protobuf.StringValue homePhone = 4;
 }
 
-message Contact {
+message ContactDto {
   string id =1;
   google.protobuf.StringValue firstName = 2;
   string lastName = 3;
@@ -33,8 +33,8 @@ message Contact {
   google.protobuf.StringValue title = 5;
   google.protobuf.StringValue description = 6;
   google.protobuf.StringValue photo = 7;
-  Address address = 8;
-  ContactInformation contactInfo =9;
+  StreetAddressDto mailingAddress = 8;
+  ContactInfoDto contactInfo =9;
 }
 
 message BooleanResponse {

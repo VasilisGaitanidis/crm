@@ -1,35 +1,31 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CRM.Contact.Extensions;
-using CRM.Dapper;
 using CRM.Protobuf.Contacts.V1;
-using CRM.Shared.Repository;
 using MediatR;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRM.Contact.Queries.Handlers
 {
-    public class FindAllContactsHandler : IRequestHandler<FindAllContactsQuery, ListContactsResponse>
+    public class FindAllContactsHandler : IRequestHandler<FindAllContactsQuery, IEnumerable<ContactDto>>
     {
-        private readonly IUnitOfWork _uow;
-        private readonly ILogger<FindAllContactsHandler> _logger;
+        private readonly ContactContext _context;
 
-        public FindAllContactsHandler(IUnitOfWork uow,
-            ILogger<FindAllContactsHandler> logger)
+        public FindAllContactsHandler(ContactContext context)
         {
-            _uow = uow;
-            _logger = logger;
+            _context = context;
         }
 
-        public async Task<ListContactsResponse> Handle(FindAllContactsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ContactDto>> Handle(FindAllContactsQuery request, CancellationToken cancellationToken)
         {
-            var contacts = await _uow.Connection.GetListAsync<Domain.Contact>();
-            var response = new ListContactsResponse();
+            var contacts = await _context.Contacts
+               .AsNoTracking()
+               .Select(x => x.ToContactProtobuf())
+               .ToListAsync();
 
-            _logger.LogInformation("Start query all contacts");
-            response.Contacts.AddRange(contacts.Select(c => c.ToContactProtobuf()));
-            return response;
+            return contacts;
         }
     }
 }

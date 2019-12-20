@@ -1,10 +1,12 @@
+using CRM.Protobuf.Contacts.V1;
+
 namespace CRM.Contact.Extensions
 {
     public static class ConvertDomainToProtobuf
     {
-        public static Protobuf.Contacts.V1.Contact ToContactProtobuf(this Domain.Contact contact)
+        public static ContactDto ToContactProtobuf(this Domain.Contact contact)
         {
-            return new Protobuf.Contacts.V1.Contact
+            return new ContactDto
             {
                 Id = contact.ContactId.ToString(),
                 FirstName = contact.FirstName,
@@ -12,20 +14,20 @@ namespace CRM.Contact.Extensions
                 Company = contact.Company,
                 Description = contact.Description,
                 Title = contact.Title,
-                Address = new Protobuf.Contacts.V1.Address
+                MailingAddress = new StreetAddressDto
                 {
-                    City = contact.MailingCity,
-                    Country = contact.MailingCountry,
-                    State = contact.MailingState,
-                    Street = contact.MailingStreet,
-                    Zipcode = contact.MailingZipCode
+                    City = contact.MailingAddress?.City,
+                    Country = contact.MailingAddress?.Country,
+                    State = contact.MailingAddress?.State,
+                    Street = contact.MailingAddress?.Street,
+                    Zipcode = contact.MailingAddress?.ZipCode
                 },
-                ContactInfo = new Protobuf.Contacts.V1.ContactInformation
+                ContactInfo = new ContactInfoDto
                 {
-                    Email = contact.Email,
-                    HomePhone = contact.HomePhone,
-                    Mobile = contact.Mobile,
-                    WorkPhone = contact.WorkPhone
+                    Email = contact.ContactInfo?.Email,
+                    HomePhone = contact.ContactInfo?.HomePhone,
+                    Mobile = contact.ContactInfo?.Mobile,
+                    WorkPhone = contact.ContactInfo?.WorkPhone
                 }
             };
         }

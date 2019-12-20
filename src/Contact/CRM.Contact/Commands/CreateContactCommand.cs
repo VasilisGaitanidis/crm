@@ -3,11 +3,11 @@ using MediatR;
 
 namespace CRM.Contact.Commands
 {
-    public class CreateContactCommand : IRequest<CreateContactResponse>
+    public class CreateContactCommand : IRequest<ContactDto>
     {
         public CreateContactCommand(CreateContactRequest contactRequest)
         {
-            this.ContactRequest = contactRequest;
+            ContactRequest = contactRequest;
 
         }
         public CreateContactRequest ContactRequest { get; private set; }
