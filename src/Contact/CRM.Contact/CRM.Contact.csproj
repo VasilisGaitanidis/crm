@@ -19,9 +19,9 @@
     <PackageReference Include="MediatR" Version="7.0.0"/>
     <PackageReference Include="FluentValidation" Version="8.6.0"/>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.0"/>
-    <PackageReference Include="HotChocolate" Version="10.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\CRM.Shared\CRM.Shared.csproj"/>
+    <ProjectReference Include="..\..\BuildingBlocks\CRM.GraphQL\CRM.GraphQL.csproj"/>
   </ItemGroup>
 </Project>

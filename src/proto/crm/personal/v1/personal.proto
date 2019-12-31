@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package crm.person.v1;
+
+option csharp_namespace = "CRM.Protobuf.Person.V1";
+
+import "google/protobuf/wrappers.proto";
+import "crm/common/v1/common.proto";
+
+message PersonDto {
+  string personId = 1;
+  string firstName = 2;
+  string lastName = 3;
+  google.protobuf.StringValue alias = 4;
+  crm.common.v1.UserStatus userStatus = 5;
+  google.protobuf.StringValue userName = 6;
+  string email = 7;
+  google.protobuf.StringValue profileName = 8;
+  crm.common.v1.StreetAddressDto address = 9;
+  PersonInfoDto personInfo = 10;
+}
+
+message PersonInfoDto {
+  google.protobuf.StringValue fax = 1;
+  google.protobuf.StringValue landLineNumber = 2;
+  google.protobuf.StringValue mobileNumber = 3;
+  google.protobuf.StringValue website = 4;
+}
