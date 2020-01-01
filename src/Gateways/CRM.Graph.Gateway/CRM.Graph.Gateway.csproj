@@ -9,8 +9,8 @@
     <LaunchBrowser />
   </PropertyGroup>
   <ItemGroup>
-    <Protobuf Include="..\..\proto\crm\contact\v1\contact.proto" />
-    <Protobuf Include="..\..\proto\crm\contact\v1\contact_api.proto" />
+    <Protobuf Include="..\..\proto\crm\contact\v1\contact.proto"/>
+    <Protobuf Include="..\..\proto\crm\contact\v1\contact_api.proto"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.11.2" />
@@ -29,6 +29,6 @@
     <ProjectReference Include="..\..\BuildingBlocks\CRM.GraphQL\CRM.GraphQL.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services" />
+    <Folder Include="Services"/>
   </ItemGroup>
 </Project>
