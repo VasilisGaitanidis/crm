@@ -1,4 +1,5 @@
 using System;
+using CRM.Protobuf.Commons.V1;
 
 namespace CRM.Personal.Domain
 {
@@ -8,7 +9,7 @@ namespace CRM.Personal.Domain
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Alias { get; set; }
-        // public UserStatus UserStatus { get; set; }
+        public UserStatus UserStatus { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
         public string ProfileName { get; set; }

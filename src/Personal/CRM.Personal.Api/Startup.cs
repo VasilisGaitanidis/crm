@@ -1,11 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CRM.GraphQL.Errors;
+﻿using CRM.GraphQL.Errors;
+using CRM.Personal.GraphType;
+using CRM.Personal.Services;
+using CRM.Personal.Validators;
+using CRM.Shared.CorrelationId;
 using CRM.Shared.Interceptors;
+using CRM.Tracing.Jaeger;
 using HotChocolate;
+using HotChocolate.AspNetCore;
+using HotChocolate.AspNetCore.Playground;
 using HotChocolate.Execution.Configuration;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,11 +24,29 @@ namespace CRM.Personal.Api
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddGrpc();
+            services.AddJaeger()
+                .AddMediatR(typeof(PersonalService))
+                .AddCorrelationId()
+                .AddGrpc()
+                .AddGraphQL()
+                .AddCustomDbContext(_configuration);
+
+            services.Scan(scan => scan
+               .FromAssemblyOf<CreatePersonRequestValidator>()
+               .AddClasses(c => c.AssignableTo(typeof(FluentValidation.IValidator<>)))
+               .AsImplementedInterfaces()
+               .WithTransientLifetime());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,15 +57,21 @@ namespace CRM.Personal.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context =>
+            app.UseCorrelationId()
+                .UsePlayground(new PlaygroundOptions()
                 {
-                    await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+                    QueryPath = "/graphql",
+                    Path = "/ui/playground",
+                })
+                .UseRouting()
+                .UseEndpoints(endpoints =>
+                {
+                    endpoints.MapGrpcService<PersonalService>();
+                    endpoints.MapGet("/", async context =>
+                    {
+                        await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+                    });
                 });
-            });
         }
     }
 
@@ -79,10 +107,10 @@ namespace CRM.Personal.Api
             services.AddGraphQL(sp => Schema.Create(c =>
             {
                 c.RegisterServiceProvider(sp);
-                // c.RegisterQueryType<QueryType>();
-                // c.RegisterMutationType<MutationType>();
-                // c.RegisterType<AddressType>();
-                // c.RegisterType<PersonInfoType>();
+                c.RegisterQueryType<QueryType>();
+                c.RegisterMutationType<MutationType>();
+                c.RegisterType<AddressType>();
+                c.RegisterType<PersonInfoType>();
             }), new QueryExecutionOptions
             {
                 IncludeExceptionDetails = true,

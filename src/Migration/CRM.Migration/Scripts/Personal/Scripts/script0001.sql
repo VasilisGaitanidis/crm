@@ -1,0 +1,20 @@
+CREATE TABLE person (
+	person_id uuid NOT NULL,
+	first_name varchar(100) NOT NULL,
+	last_name varchar(50) NOT NULL,
+	alias varchar(100) NULL,
+	user_status varchar(20) NOT NULL,
+	user_name varchar(100) NULL,
+	email varchar(100) NOT NULL,
+	profile_name varchar(100) NULL,
+	fax varchar(50) NULL,
+	landline_number varchar(50) NULL,
+	mobile_number varchar(50) NULL,
+	website varchar(100) NULL,
+	street varchar(100) NULL,
+	city varchar(100) NULL,
+	state varchar(100) NULL,
+	zipcode varchar(50) NULL,
+	country varchar(100) NULL,
+	CONSTRAINT person_pk PRIMARY KEY (person_id)
+);

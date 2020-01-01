@@ -1,3 +1,5 @@
+using CRM.Personal.Domain;
+using CRM.Personal.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRM.Personal
@@ -6,7 +8,7 @@ namespace CRM.Personal
     {
         public const string DEFAULT_SCHEMA = "public";
 
-        // public DbSet<Person> Persons { get; set; }
+        public DbSet<Person> Persons { get; set; }
 
         public PersonalContext(DbContextOptions<PersonalContext> options) : base(options)
         {
@@ -15,7 +17,7 @@ namespace CRM.Personal
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // modelBuilder.ApplyConfiguration(new PersonEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonEntityTypeConfiguration());
         }
     }
 }
