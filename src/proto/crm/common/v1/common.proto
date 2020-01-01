@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package crm.common.v1;
+
+option csharp_namespace = "CRM.Protobuf.Commons.V1";
+
+import "google/protobuf/wrappers.proto";
+
+message PongReply {
+  string message = 1;
+}
+
+message BooleanResponse {
+  bool status = 1;
+}
+
+message StreetAddressDto {
+  google.protobuf.StringValue street = 1;
+  google.protobuf.StringValue city = 2;
+  google.protobuf.StringValue state = 3;
+  google.protobuf.StringValue zipcode = 4;
+  google.protobuf.StringValue country = 5;
+}
+
+enum Title {
+  Mr = 0;
+  Mrs = 1;
+  Ms = 2;
+}
+
+enum Gender {
+  male = 0;
+  female = 1;
+}
+
+enum UserStatus {
+  active = 0;
+  inactive = 1;
+  lock = 2;
+}

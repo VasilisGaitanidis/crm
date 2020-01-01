@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>CRM.Personal</AssemblyName>
+    <RootNamespace>CRM.Personal</RootNamespace>
+    <LangVersion>8</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Protobuf Include="..\..\proto\crm\common\v1\common.proto" Link="protobuf\common.proto" AdditionalImportDirs="..\..\proto\" />
+    <Protobuf Include="..\..\proto\crm\personal\v1\personal.proto" Link="protobuf\personal.proto" AdditionalImportDirs="..\..\proto\" />
+    <Protobuf Include="..\..\proto\crm\personal\v1\personal_api.proto" Link="protobuf\personal_api.proto" AdditionalImportDirs="..\..\proto\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\CRM.Shared\CRM.Shared.csproj"/>
+    <ProjectReference Include="..\..\BuildingBlocks\CRM.GraphQL\CRM.GraphQL.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.0" />
+    <PackageReference Include="MediatR" Version="8.0.0" />
+    <PackageReference Include="FluentValidation" Version="8.6.1" />
+    <PackageReference Include="Grpc.Tools" Version="2.26.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.11.2" />
+  </ItemGroup>
+</Project>

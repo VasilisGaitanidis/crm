@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package crm.person.v1;
+
+option csharp_namespace = "CRM.Protobuf.Personal.V1";
+
+import "crm/common/v1/common.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+service PersonalApi {
+  rpc Ping (google.protobuf.Empty) returns (crm.common.v1.PongReply);
+}
+
+message CreatePersonRequest {
+  google.protobuf.StringValue firstName = 1;
+  google.protobuf.StringValue lastName = 2;
+  google.protobuf.StringValue alias = 3;
+  crm.common.v1.UserStatus userStatus = 4;
+  google.protobuf.StringValue userName = 5;
+  google.protobuf.StringValue email = 6;
+  google.protobuf.StringValue profileName = 7;
+}
