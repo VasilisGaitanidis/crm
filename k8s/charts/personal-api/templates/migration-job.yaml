@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrate-personal
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  activeDeadlineSeconds: 120
+  template:
+    spec:
+      containers:
+      - name: db-migrate
+        image: s5enow/migration:latest
+        imagePullPolicy: Always
+        command: ["dotnet", "S5E.Migration.dll", "personal"]
+        env:
+          {{- if .Values.env.values -}}
+          {{- range .Values.env.values }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+          {{- end -}}
+          {{- end }}
+      restartPolicy: Never

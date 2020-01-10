@@ -1,0 +1,81 @@
+variables:
+    disable.coverage.autogenerate: 'true'
+    azureSubscriptionEndpoint: azuresubscription-endpoint
+    azureResourceGroup: lab01
+    kubernetesCluster: aks-lab01
+    registryEndpoint: dockerhub-connection
+
+trigger:
+  branches:
+    include:
+      - master
+      - feature/*
+    exclude:
+      - ref/tags/*
+  paths:
+    include:
+      - src/Personal/CRM.Personal.Api
+      - src/Personal/CRM.Personal
+      - src/Personal/CRM.Personal.FunctionalTests
+      - src/BuildingBlocks/CRM.Shared
+
+stages:
+
+- stage: Pre_Build
+  displayName: Pre build
+  jobs:
+    - template: ../pre-build.yml
+
+- stage: Build_Run_Integration_Tests
+  displayName: Build and run integration tests
+  dependsOn: Pre_Build
+  jobs:
+    - template: ../prepare-env.yml
+
+    - template: ../build-services.yml
+      parameters:
+        services: ["personal-api"]
+
+    # - template: ../run-integration-test.yml
+    #   parameters:
+    #     testService: personal-api-test
+
+- stage: Publish_Docker_Images
+  displayName: Docker images
+  dependsOn: Build_Run_Integration_Tests
+  condition: and(succeeded(), eq(variables['crm.nightlybuild'], 'true'))
+  jobs:
+    - template: ../prepare-env.yml
+
+    - template: ../publish-docker-images.yml
+      parameters:
+        services: ["personal-api"]
+        registryEndpoint: $(registryEndpoint)
+
+- stage: Publish_Helm_Chart
+  displayName: Publish helm chart
+  dependsOn: Publish_Docker_Images
+  condition: and(succeeded(), eq(variables['crm.nightlybuild'], 'true'))
+  jobs:
+    - template: ../prepare-env.yml
+
+    - template: ../publish-helm-chart.yml
+      parameters:
+        service: personal-api
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: $(azureResourceGroup)
+        kubernetesCluster: $(kubernetesCluster)
+
+- stage: Deploy_Dev_Environment
+  displayName: Deploy on Dev environment
+  dependsOn: Publish_Helm_Chart
+  jobs:
+    - template: ../prepare-env.yml
+
+    - template: ../install-helm-chart.yml
+      parameters:
+        service: personal-api
+        kubernetesNamespace: develop
+        azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+        azureResourceGroup: $(azureResourceGroup)
+        kubernetesCluster: $(kubernetesCluster)
