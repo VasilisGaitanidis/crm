@@ -27,7 +27,7 @@ RUN dotnet publish src/Communication/CRM.Communication.Api/ -c Release -o /app -
 FROM builder AS functionaltest
 WORKDIR /src/src/Communication/CRM.Communication.FunctionalTests
 
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.0-buster-slim
 WORKDIR /app
 
 ENV ASPNETCORE_ENVIRONMENT docker

@@ -23,7 +23,7 @@ COPY ["src/Gateways/CRM.Graph.Gateway/.", "src/Gateways/CRM.Graph.Gateway/"]
 
 RUN dotnet publish src/Gateways/CRM.Graph.Gateway/ -c Release -o /app --no-restore
 
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.0-buster-slim
 WORKDIR /app
 
 ENV ASPNETCORE_URLS http://*:80
