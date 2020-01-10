@@ -15,7 +15,8 @@ fullnameOverride: "communication-api"
 
 service:
   type: ClusterIP
-  port: 80
+  port: 5002
+  grpcPort: 15002
 
 ingress:
   enabled: false
