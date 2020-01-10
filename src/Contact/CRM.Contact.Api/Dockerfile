@@ -32,7 +32,7 @@ RUN dotnet publish src/Contact/CRM.Contact.Api/ -c Release -o /app --no-restore
 FROM builder AS functionaltest
 WORKDIR /src/src/Contact/CRM.Contact.FunctionalTests
 
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.0-buster-slim
 WORKDIR /app
 
 ENV ASPNETCORE_ENVIRONMENT docker

@@ -189,6 +189,7 @@ services:
       - contact-api
       - communication-api
       - identity-api
+      - personal-api
 
 volumes:
   postgres-data:

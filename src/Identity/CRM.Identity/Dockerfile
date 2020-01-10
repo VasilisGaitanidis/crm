@@ -15,7 +15,7 @@ COPY ["src/BuildingBlocks/CRM.Metrics/.", "src/BuildingBlocks/CRM.Metrics/"]
 COPY ["src/Identity/CRM.Identity/.", "src/Identity/CRM.Identity/"]
 RUN dotnet publish src/Identity/CRM.Identity/ -c Release -o /app --no-restore
 
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.0-buster-slim
 WORKDIR /app
 
 ENV ASPNETCORE_URLS http://*:80

@@ -47,8 +47,8 @@ services:
       - 15001:15001
     environment:
       - ASPNETCORE_ENVIRONMENT=development
-      - Jaeger__Enabled=true
-      - Jaeger__UdpHost=jaeger
+      - OpenTelemetry__Enabled=true
+      - OpenTelemetry__zipkinEndpoint=http://zipkin:9411/api/v2/spans
       - ConnectionStrings__contact=Server=postgresql;Port=5432;Database=crm-contact;User Id=lab;Password=P@ssw0rd;
       - rabbitMQ__Url=rabbitmq://rabbitmq
       - Logging__Loki__Enabled=false
@@ -72,8 +72,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=development
       - PathBase=/identity
-      - Jaeger__Enabled=true
-      - Jaeger__UdpHost=jaeger
+      - OpenTelemetry__Enabled=true
+      - OpenTelemetry__zipkinEndpoint=http://zipkin:9411/api/v2/spans
       - ConnectionStrings__identity=Server=postgresql;Port=5432;Database=crm-identity;User Id=lab;Password=P@ssw0rd;
       - Logging__Loki__Enabled=false
       - Logging__Seq__Enabled=${SEQ__ENABLED:-false}
@@ -96,8 +96,8 @@ services:
       - 15002:15002
     environment:
       - ASPNETCORE_ENVIRONMENT=development
-      - Jaeger__UdpHost=jaeger
-      - Jaeger__Enabled=true
+      - OpenTelemetry__Enabled=true
+      - OpenTelemetry__zipkinEndpoint=http://zipkin:9411/api/v2/spans
       - rabbitMQ__Url=rabbitmq://rabbitmq
       - Logging__Loki__Enabled=false
       - Logging__Seq__Enabled=${SEQ__ENABLED:-false}
@@ -117,9 +117,15 @@ services:
       - 5100:5100
     environment:
       - ASPNETCORE_ENVIRONMENT=development
-      - Jaeger__UdpHost=jaeger
-      - Services__ContactService__Url=http://contact-api:15001
-      - Jaeger__Enabled=true
+      - OpenTelemetry__Enabled=true
+      - OpenTelemetry__zipkinEndpoint=http://zipkin:9411/api/v2/spans
+      - Services__ContactService__GrpcUrl=http://contact-api:15001
+      - Services__ContactService__Url=http://contact-api:5001
+      - Services__CommunicationService__GrpcUrl=http://communication-api:15002
+      - Services__CommunicationService__Url=http://communication-api:5002
+      - Services__PersonalService__GrpcUrl=http://personal-api:15003
+      - Services__PersonalService__Url=http://personal-api:5003
+      - Services__IdentityService__Url=http://identity-api:5101
       - Cors__Origins=http://localhost:5102
       - Logging__Loki__Enabled=false
       - Logging__Seq__Enabled=${SEQ__ENABLED:-false}
