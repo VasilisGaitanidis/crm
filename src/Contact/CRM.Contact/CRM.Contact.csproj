@@ -5,8 +5,9 @@
     <RootNamespace>CRM.Contact</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Protobuf Include="..\..\proto\crm\contact\v1\contact.proto"/>
-    <Protobuf Include="..\..\proto\crm\contact\v1\contact_api.proto"/>
+    <Protobuf Include="..\..\proto\crm\common\v1\common.proto" AdditionalImportDirs="..\..\proto\"/>
+    <Protobuf Include="..\..\proto\crm\contact\v1\contact.proto" AdditionalImportDirs="..\..\proto\"/>
+    <Protobuf Include="..\..\proto\crm\contact\v1\contact_api.proto" AdditionalImportDirs="..\..\proto\"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.11.2" />

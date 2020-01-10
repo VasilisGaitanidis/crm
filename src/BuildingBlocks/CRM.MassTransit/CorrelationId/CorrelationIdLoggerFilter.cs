@@ -11,7 +11,7 @@ namespace CRM.MassTransit.CorrelationId
 
         public async Task Send(ConsumeContext context, IPipe<ConsumeContext> next)
         {
-            using (LogContext.PushProperty("X-Correlation-ID", context.CorrelationId?.ToString()))
+            using (LogContext.PushProperty("X-Correlation-ID", context.CorrelationId.ToString()))
             {
                 await next.Send(context);
             }

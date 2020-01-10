@@ -1,11 +1,10 @@
 using System;
-using CRM.Shared.Types;
 using MassTransit;
 
-namespace CRM.IntegrationEvents
+namespace CRM.Contact.IntegrationEvents
 {
-    public interface ContactCreated : IMessage
+    public interface ContactCreated : CorrelatedBy<Guid>
     {
-        string FirstName { get; }
+         
     }
 }

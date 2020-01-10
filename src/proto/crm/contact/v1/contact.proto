@@ -5,10 +5,7 @@ package crm.contact.v1;
 option csharp_namespace = "CRM.Protobuf.Contacts.V1";
 
 import "google/protobuf/wrappers.proto";
-
-message PongReply {
-  string message = 1;
-}
+// import "google/protobuf/timestamp.proto";
 
 message StreetAddressDto {
   google.protobuf.StringValue street = 1;
@@ -35,10 +32,6 @@ message ContactDto {
   google.protobuf.StringValue photo = 7;
   StreetAddressDto mailingAddress = 8;
   ContactInfoDto contactInfo =9;
-}
-
-message BooleanResponse {
-  bool status = 1;
 }
 
 enum Title {

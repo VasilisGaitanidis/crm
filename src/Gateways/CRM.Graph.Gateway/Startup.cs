@@ -4,9 +4,7 @@ using CRM.Graph.Gateway.Options;
 using CRM.Metrics;
 using CRM.Shared;
 using CRM.Shared.CorrelationId;
-using CRM.Shared.Interceptors;
-using CRM.Shared.Services;
-using CRM.Tracing.Jaeger;
+using CRM.OpenTelemetry;
 using HotChocolate;
 using HotChocolate.AspNetCore;
 using HotChocolate.AspNetCore.Playground;
@@ -20,8 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using OpenTracing.Contrib.Grpc.Interceptors;
-using static CRM.Protobuf.Contacts.V1.ContactApi;
+using CRM.GraphQL.Errors;
 
 namespace CRM.Graph.Gateway
 {
@@ -41,13 +38,13 @@ namespace CRM.Graph.Gateway
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddCustomOpenTelemetry()
                 .AddCorrelationId()
-                .AddJaeger()
+                .AddHeaderPropagation()
                 .AddAppMetrics()
                 .AddGraphQL(Configuration)
                 .AddCors(Configuration)
-                .AddHealthChecks(Configuration)
-                .AddGrpc(Configuration);
+                .AddHealthChecks(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +57,7 @@ namespace CRM.Graph.Gateway
 
             app.UsePathBase(Configuration["PathBase"])
                 .UseCorrelationId()
+                .UseHeaderPropagation()
                 .UseAppMetrics()
                 .UseCors("CorsPolicy")
                 .UseGraphQL("/graphql")
@@ -87,25 +85,12 @@ namespace CRM.Graph.Gateway
 
     static class CustomExtensionsMethods
     {
-        public static IServiceCollection AddGrpc(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddHeaderPropagation(this IServiceCollection services)
         {
-            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-            services.Scan(scan => scan
-                            .FromCallingAssembly()
-                            .AddClasses(x => x.AssignableTo(typeof(ServiceBase)))
-                            .AsImplementedInterfaces()
-                            .WithScopedLifetime());
-
-            services.AddTransient<ClientTracingInterceptor>();
-            services.AddTransient<ClientLoggerInterceptor>();
-            var serviceOptions = configuration.GetOptions<ServiceOptions>("Services");
-
-            services.AddGrpcClient<ContactApiClient>(o =>
+            services.AddHeaderPropagation(options =>
             {
-                o.Address = new Uri(serviceOptions.ContactService.Url);
-            })
-            .AddInterceptor<ClientLoggerInterceptor>()
-            .AddInterceptor<ClientTracingInterceptor>();
+                options.Headers.Add("X-Correlation-ID");
+            });
 
             return services;
         }
@@ -119,14 +104,27 @@ namespace CRM.Graph.Gateway
                 // in order to pass on the token or any other headers to the backend schema use the IHttpContextAccessor
                 var context = sp.GetRequiredService<IHttpContextAccessor>().HttpContext;
                 client.BaseAddress = new Uri($"{serviceOptions.ContactService.Url}/graphql");
-            });
+            })
+            .AddHeaderPropagation();
+
+            services.AddHttpClient("personal", (sp, client) =>
+            {
+                // in order to pass on the token or any other headers to the backend schema use the IHttpContextAccessor
+                var context = sp.GetRequiredService<IHttpContextAccessor>().HttpContext;
+                client.BaseAddress = new Uri($"{serviceOptions.PersonalService.Url}/graphql");
+            })
+            .AddHeaderPropagation();
+
             services.AddHttpContextAccessor();
             services.AddSingleton<IQueryResultSerializer, JsonQueryResultSerializer>();
 
             services
                 .AddGraphQLSubscriptions()
                 .AddStitchedSchema(builder => builder
-                    .AddSchemaFromHttp("contact"));
+                    .AddSchemaFromHttp("contact")
+                    .AddSchemaFromHttp("personal")
+                )
+                .AddErrorFilter<ValidationErrorFilter>();
 
             return services;
         }
@@ -164,5 +162,28 @@ namespace CRM.Graph.Gateway
 
             return services;
         }
+
+        // public static IServiceCollection AddGrpc(this IServiceCollection services, IConfiguration configuration)
+        // {
+        //     AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+        //     services.Scan(scan => scan
+        //                     .FromCallingAssembly()
+        //                     .AddClasses(x => x.AssignableTo(typeof(ServiceBase)))
+        //                     .AsImplementedInterfaces()
+        //                     .WithScopedLifetime());
+
+        //     // services.AddTransient<ClientTracingInterceptor>();
+        //     services.AddTransient<ClientLoggerInterceptor>();
+        //     var serviceOptions = configuration.GetOptions<ServiceOptions>("Services");
+
+        //     services.AddGrpcClient<ContactApiClient>(o =>
+        //     {
+        //         o.Address = new Uri(serviceOptions.ContactService.Url);
+        //     })
+        //     .AddInterceptor<ClientLoggerInterceptor>();
+        //     // .AddInterceptor<ClientTracingInterceptor>();
+
+        //     return services;
+        // }
     }
 }

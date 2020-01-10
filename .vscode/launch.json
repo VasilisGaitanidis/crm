@@ -5,6 +5,26 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Personal Service",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/Personal/CRM.Personal.Api/bin/Debug/netcoreapp3.1/CRM.Personal.Api.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/Personal/CRM.Personal.Api",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      }
+    },
+    {
       "name": "Communication Service",
       "type": "coreclr",
       "request": "launch",

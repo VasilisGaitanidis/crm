@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM.Personal", "src\Persona
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM.Personal.Api", "src\Personal\CRM.Personal.Api\CRM.Personal.Api.csproj", "{EC6F657A-9DCB-40BE-A8FB-2589CC8F28F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM.OpenTelemetry", "src\BuildingBlocks\CRM.OpenTelemetry\CRM.OpenTelemetry.csproj", "{24D8A4AD-C9F1-4D49-80BB-3405FABF6665}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{EC6F657A-9DCB-40BE-A8FB-2589CC8F28F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC6F657A-9DCB-40BE-A8FB-2589CC8F28F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC6F657A-9DCB-40BE-A8FB-2589CC8F28F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24D8A4AD-C9F1-4D49-80BB-3405FABF6665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24D8A4AD-C9F1-4D49-80BB-3405FABF6665}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24D8A4AD-C9F1-4D49-80BB-3405FABF6665}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24D8A4AD-C9F1-4D49-80BB-3405FABF6665}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,6 +173,7 @@ Global
 		{56AB4280-C173-4218-B3E1-CC5FE9B2F7F4} = {22245CF8-8DBA-4B61-AD81-168CE3ACB851}
 		{93C3A503-00FF-4248-8966-0936FE3E8569} = {22245CF8-8DBA-4B61-AD81-168CE3ACB851}
 		{EC6F657A-9DCB-40BE-A8FB-2589CC8F28F3} = {22245CF8-8DBA-4B61-AD81-168CE3ACB851}
+		{24D8A4AD-C9F1-4D49-80BB-3405FABF6665} = {D7B2C2A5-C5CB-4359-A4CC-1EA15A1C7F19}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {69F3C4B9-8457-466C-B0CB-B5ABB01E6A78}

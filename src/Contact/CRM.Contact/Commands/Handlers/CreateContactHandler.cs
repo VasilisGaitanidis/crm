@@ -7,8 +7,8 @@ using CRM.Protobuf.Contacts.V1;
 using CRM.Contact.Extensions;
 using Microsoft.Extensions.Logging;
 using MassTransit;
-using CRM.IntegrationEvents;
 using CRM.Shared.CorrelationId;
+using CRM.Contact.IntegrationEvents;
 
 namespace CRM.Contact.Commands.Handlers
 {
@@ -16,20 +16,20 @@ namespace CRM.Contact.Commands.Handlers
     {
         private readonly IValidator<CreateContactRequest> _validator;
         private readonly ILogger<CreateContactHandler> _logger;
-        // private readonly IBusControl _bus;
-        // private readonly ICorrelationContextAccessor _correlationContextAccessor;
+        private readonly IBusControl _bus;
+        private readonly ICorrelationContextAccessor _correlationContextAccessor;
         private readonly ContactContext _context;
 
         public CreateContactHandler(IValidator<CreateContactRequest> vadiator,
              ILogger<CreateContactHandler> logger, 
-            //IBusControl bus, 
-            // ICorrelationContextAccessor correlationContextAccessor,
+            IBusControl bus, 
+            ICorrelationContextAccessor correlationContextAccessor,
             ContactContext context)
         {
             _validator = vadiator;
             _logger = logger;
-            // _bus = bus;
-            // _correlationContextAccessor = correlationContextAccessor;
+            _bus = bus;
+            _correlationContextAccessor = correlationContextAccessor;
             _context = context;
         }
 
@@ -42,12 +42,12 @@ namespace CRM.Contact.Commands.Handlers
             var contact = request.ContactRequest.ToContact();
             await _context.Contacts.AddAsync(contact);
             await _context.SaveChangesAsync(cancellationToken);
-
-            //  await _bus.Publish<ContactCreated>(new
-            // {
-            //     contact.FirstName,
-            //     _correlationContextAccessor?.CorrelationContext?.CorrelationId
-            // });
+            
+            await _bus.Publish<ContactCreated>(new
+            {
+                contact.FirstName,
+                _correlationContextAccessor?.CorrelationContext?.CorrelationId
+            });
 
             return contact.ToContactProtobuf();
         }

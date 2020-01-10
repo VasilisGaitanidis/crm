@@ -1,6 +1,5 @@
 using CRM.Shared.Interceptors;
 using CRM.Shared.Repository;
-using CRM.Tracing.Jaeger;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
-using OpenTracing.Contrib.Grpc.Interceptors;
 using MassTransit;
 using System;
 using MassTransit.AspNetCoreIntegration;
@@ -31,6 +29,8 @@ using HotChocolate.Execution.Configuration;
 using HotChocolate.AspNetCore;
 using HotChocolate.AspNetCore.Playground;
 using CRM.Contact.GraphType;
+using CRM.OpenTelemetry;
+using CRM.OpenTelemetry.Behaviors;
 
 namespace CRM.Contact.Api
 {
@@ -51,7 +51,7 @@ namespace CRM.Contact.Api
                 .AddGraphQL()
                 .AddGrpc()
                 .AddCorrelationId()
-                .AddJaeger()
+                .AddCustomOpenTelemetry()
                 .AddMediatR(typeof(ContactService))
                 .AddAppMetrics()
                 .AddHealthChecks(_configuration)
@@ -63,6 +63,8 @@ namespace CRM.Contact.Api
                .AddClasses(c => c.AssignableTo(typeof(IValidator<>)))
                .AsImplementedInterfaces()
                .WithTransientLifetime());
+
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TracingBehavior<,>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -117,7 +119,6 @@ namespace CRM.Contact.Api
             services.AddGrpc(options =>
             {
                 options.Interceptors.Add<ExceptionInterceptor>();
-                options.Interceptors.Add<ServerTracingInterceptor>();
                 options.EnableDetailedErrors = true;
             });
 
@@ -143,7 +144,6 @@ namespace CRM.Contact.Api
         {
             services.AddMassTransit((provider) =>
             {
-                MessageCorrelation.UseCorrelationId<IMessage>(x => x.CorrelationId);
                 var rabbitMqOption = configuration.GetOptions<RabbitMqOptions>("rabbitMQ");
 
                 return Bus.Factory.CreateUsingRabbitMq(cfg =>

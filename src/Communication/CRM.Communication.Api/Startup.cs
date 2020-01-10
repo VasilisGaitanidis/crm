@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using CRM.Tracing.Jaeger;
 using MassTransit.AspNetCoreIntegration;
 using MassTransit;
 using CRM.Communication.IntegrationHandlers;
@@ -15,6 +14,7 @@ using CRM.Metrics;
 using Microsoft.AspNetCore.Http;
 using MassTransit.Context;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using CRM.OpenTelemetry;
 
 namespace CRM.Communication.Api
 {
@@ -31,7 +31,8 @@ namespace CRM.Communication.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddJaeger()
+            services
+                .AddCustomOpenTelemetry()
                 .AddAppMetrics()
                 .AddHealthChecks(_configuration)
                 .AddMassTransit(_configuration);

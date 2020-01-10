@@ -5,7 +5,6 @@
 using CRM.Identity.Data;
 using CRM.Identity.Models;
 using CRM.Shared.CorrelationId;
-using CRM.Tracing.Jaeger;
 using CRM.Metrics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using System;
 using System.Reflection;
+using CRM.OpenTelemetry;
 
 namespace CRM.Identity
 {
@@ -37,7 +37,7 @@ namespace CRM.Identity
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCorrelationId();
-            services.AddJaeger();
+            services.AddCustomOpenTelemetry();
             services.AddAppMetrics();
             services.AddControllersWithViews();
             services.AddHealthChecks()
