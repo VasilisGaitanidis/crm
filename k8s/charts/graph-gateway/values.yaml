@@ -15,7 +15,7 @@ fullnameOverride: "graph-gateway"
 
 service:
   type: ClusterIP
-  port: 80
+  port: 5100
 
 ingress:
   enabled: true
