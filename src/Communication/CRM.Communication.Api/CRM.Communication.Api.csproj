@@ -10,7 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\CRM.Configuration.Vault\CRM.Configuration.Vault.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\CRM.MassTransit\CRM.MassTransit.csproj" />
-    <ProjectReference Include="..\..\BuildingBlocks\CRM.Tracing.Jaeger\CRM.Tracing.Jaeger.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\CRM.OpenTelemetry\CRM.OpenTelemetry.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\CRM.Metrics\CRM.Metrics.csproj" />
     <ProjectReference Include="..\CRM.Communication\CRM.Communication.csproj">
       <GlobalPropertiesToRemove />

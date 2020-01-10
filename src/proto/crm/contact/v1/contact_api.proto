@@ -4,12 +4,13 @@ package crm.contact.v1;
 
 option csharp_namespace = "CRM.Protobuf.Contacts.V1";
 
+import "crm/common/v1/common.proto";
 import "contact.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
 
 service ContactApi {
-  rpc Ping (google.protobuf.Empty) returns (PongReply);
+  rpc Ping (google.protobuf.Empty) returns (crm.common.v1.PongReply);
 }
 
 message GetContactRequest {

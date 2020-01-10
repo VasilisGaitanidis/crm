@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using CRM.MassTransit.Tracing;
 using GreenPipes;
 using MassTransit;
+using OpenTelemetry.Trace.Configuration;
 using OpenTracing.Propagation;
 using OpenTracing.Util;
 

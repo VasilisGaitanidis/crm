@@ -64,7 +64,5 @@ env:
       value: http://seq.monitoring.svc.cluster.local
     - name: Logging__Seq__ApiKey
       value: 11zWlcFxJYXUFqKXoKGK
-    - name: Jaeger__UdpHost
-      value: jaeger-agent.monitoring.svc.cluster.local
-    - name: Jaeger__Enabled
-      value: true
+    - name: OpenTelemetry_Enabled
+      value: false

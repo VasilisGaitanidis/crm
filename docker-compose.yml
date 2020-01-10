@@ -28,9 +28,9 @@ services:
     networks:
       - crm
 
-  jaeger:
-    image: jaegertracing/all-in-one
-    container_name: jaeger
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
     networks:
       - crm
 
@@ -92,7 +92,7 @@ services:
     depends_on:
       - postgresql
       - rabbitmq
-      - jaeger
+      - zipkin
 
   identity-migration:
     image: ${REGISTRY:-crmnow}/identity-migration:${TAG:-latest}
@@ -119,7 +119,7 @@ services:
       - crm
     depends_on:
       - postgresql
-      - jaeger
+      - zipkin
 
   communication-api:
     image: ${REGISTRY:-crmnow}/communication-api:${TAG:-latest}
@@ -132,7 +132,36 @@ services:
       - crm
     depends_on:
       - rabbitmq
-      - jaeger
+      - zipkin
+  
+  personal-api:
+    image: ${REGISTRY:-crmnow}/personal-api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Personal/CRM.Personal.Api/Dockerfile
+      args:
+        - feed=${NUGET_FEED:- --source "https://api.nuget.org/v3/index.json"}
+    networks:
+      - crm
+    depends_on:
+      - rabbitmq
+      - postgresql
+      - zipkin
+      - seq
+
+  personal-migration:
+    image: ${REGISTRY:-crmnow}/migration:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Migration/CRM.Migration/Dockerfile
+      args:
+        - feed=${NUGET_FEED:- --source "https://api.nuget.org/v3/index.json"}
+    volumes:
+      - ./src/Migration/CRM.Migration/Scripts/:/app/Scripts:ro
+    networks:
+      - crm
+    depends_on:
+      - postgresql
 
   crm-web:
     image: ${REGISTRY:-crmnow}/crm-web:${TAG:-latest}

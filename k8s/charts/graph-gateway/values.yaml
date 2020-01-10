@@ -60,13 +60,23 @@ env:
       value: Development
     - name: PathBase
       value: /gateway
-    - name: Services__ContactService__Url
-      value: http://contact-api
-    - name: Jaeger__UdpHost
-      value: jaeger-agent.monitoring.svc.cluster.local
-    - name: Jaeger__Enabled
-      value: true
+    - name: OpenTelemetry_Enabled
+      value: false
     - name: Logging__Seq__Url
       value: http://seq.monitoring.svc.cluster.local
     - name: Logging__Seq__ApiKey
       value: 11zWlcFxJYXUFqKXoKGK
+    - name: Services__ContactService__Url
+      value: http://contact-api:5001
+    - name: Services__ContactService__GrpcUrl
+      value: http://contact-api:15001
+    - name: Services__CommunicationService__Url
+      value: http://communication-api:5002
+    - name: Services__CommunicationService__GrpcUrl
+      value: http://communication-api:15002
+    - name: Services__PersonalService__Url
+      value: http://personal-api:5003
+    - name: Services__PersonalService__GrpcUrl
+      value: http://personal-api:15003
+    - name: Services__IdentityService__Url
+      value: http://identity-api:5101

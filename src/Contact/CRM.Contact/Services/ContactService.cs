@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using CRM.Protobuf.Commons.V1;
 using CRM.Protobuf.Contacts.V1;
 using Google.Protobuf.WellKnownTypes;
 

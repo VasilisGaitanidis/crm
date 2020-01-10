@@ -1,10 +1,12 @@
-﻿using CRM.GraphQL.Errors;
+﻿using System;
+using CRM.GraphQL.Errors;
+using CRM.OpenTelemetry;
+using CRM.OpenTelemetry.Behaviors;
 using CRM.Personal.GraphType;
 using CRM.Personal.Services;
 using CRM.Personal.Validators;
 using CRM.Shared.CorrelationId;
 using CRM.Shared.Interceptors;
-using CRM.Tracing.Jaeger;
 using HotChocolate;
 using HotChocolate.AspNetCore;
 using HotChocolate.AspNetCore.Playground;
@@ -18,7 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OpenTracing.Contrib.Grpc.Interceptors;
+
 
 namespace CRM.Personal.Api
 {
@@ -35,7 +37,8 @@ namespace CRM.Personal.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddJaeger()
+            services
+                .AddCustomOpenTelemetry()
                 .AddMediatR(typeof(PersonalService))
                 .AddCorrelationId()
                 .AddGrpc()
@@ -47,6 +50,8 @@ namespace CRM.Personal.Api
                .AddClasses(c => c.AssignableTo(typeof(FluentValidation.IValidator<>)))
                .AsImplementedInterfaces()
                .WithTransientLifetime());
+            
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TracingBehavior<,>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +63,7 @@ namespace CRM.Personal.Api
             }
 
             app.UseCorrelationId()
+                .UseGraphQL("/graphql")
                 .UsePlayground(new PlaygroundOptions()
                 {
                     QueryPath = "/graphql",
@@ -92,12 +98,20 @@ namespace CRM.Personal.Api
 
         public static IServiceCollection AddGrpc(this IServiceCollection services)
         {
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
             services.AddGrpc(options =>
             {
                 options.Interceptors.Add<ExceptionInterceptor>();
-                options.Interceptors.Add<ServerTracingInterceptor>();
                 options.EnableDetailedErrors = true;
             });
+
+            // //Just for demo
+            // services.AddGrpcClient<ContactApiClient>(o =>
+            // {
+            //     o.Address = new Uri("http://localhost:15001");
+            // })
+            // .AddInterceptor<ClientLoggerInterceptor>();
 
             return services;
         }

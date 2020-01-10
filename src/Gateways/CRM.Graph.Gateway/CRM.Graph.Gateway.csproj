@@ -4,13 +4,10 @@
     <AssemblyName>CRM.Graph.Gateway</AssemblyName>
     <RootNamespace>CRM.Graph.Gateway</RootNamespace>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'GraphQL-gateway' ">
-    <StartAction>Project</StartAction>
-    <LaunchBrowser />
-  </PropertyGroup>
   <ItemGroup>
-    <Protobuf Include="..\..\proto\crm\contact\v1\contact.proto"/>
-    <Protobuf Include="..\..\proto\crm\contact\v1\contact_api.proto"/>
+    <Protobuf Include="..\..\proto\crm\common\v1\common.proto" AdditionalImportDirs="..\..\proto\"/>
+    <Protobuf Include="..\..\proto\crm\contact\v1\contact.proto" AdditionalImportDirs="..\..\proto\"/>
+    <Protobuf Include="..\..\proto\crm\contact\v1\contact_api.proto" AdditionalImportDirs="..\..\proto\"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.11.2" />
@@ -21,14 +18,15 @@
     <PackageReference Include="Scrutor" Version="3.1.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.26.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\CRM.Shared\CRM.Shared.csproj" />
-    <ProjectReference Include="..\..\BuildingBlocks\CRM.Tracing.Jaeger\CRM.Tracing.Jaeger.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\CRM.OpenTelemetry\CRM.OpenTelemetry.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\CRM.Metrics\CRM.Metrics.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\CRM.GraphQL\CRM.GraphQL.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services"/>
+    <Folder Include="Services" />
   </ItemGroup>
 </Project>

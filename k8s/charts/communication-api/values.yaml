@@ -32,8 +32,8 @@ env:
   values:
     - name: rabbitMQ__Url
       value: rabbitmq://rabbitmq
-    - name: Jaeger__UdpHost
-      value: jaeger-agent.monitoring.svc.cluster.local
+    - name: OpenTelemetry_Enabled
+      value: false
     - name: Logging__Seq__ApiKey
       value: 11zWlcFxJYXUFqKXoKGK
     - name: Logging__Seq__Url

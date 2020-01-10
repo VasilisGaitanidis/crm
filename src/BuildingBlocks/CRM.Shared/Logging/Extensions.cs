@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using CRM.Shared.Logging.Enrichers;
 using Serilog.Sinks.Loki;
 
 namespace CRM.Shared.Logging
@@ -20,8 +19,7 @@ namespace CRM.Shared.Logging
                     .ReadFrom.Configuration(context.Configuration, "Logging")
                     .Enrich.FromLogContext()
                     .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName)
-                    .Enrich.WithProperty("ApplicationName", applicationName)
-                    .Enrich.With<OpenTracingContextLogEventEnricher>();
+                    .Enrich.WithProperty("ApplicationName", applicationName);
 
                 if (loggingOptions.ConsoleEnabled)
                 {
@@ -32,7 +30,7 @@ namespace CRM.Shared.Logging
                 {
                     loggerConfiguration.WriteTo.Seq(loggingOptions.Seq.Url, apiKey: loggingOptions.Seq.ApiKey);
                 }
-                if (loggingOptions.Loki.Enabled)
+                if (loggingOptions.Loki != null && loggingOptions.Loki.Enabled)
                 {
                     var credentials = new NoAuthCredentials(loggingOptions.Loki.Url);
                     loggerConfiguration.WriteTo.LokiHttp(credentials, new LokiLogLabelProvider(context.HostingEnvironment.EnvironmentName, applicationName));

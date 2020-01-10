@@ -5,6 +5,7 @@ namespace CRM.Graph.Gateway.Options
         public ServiceConfig ContactService { get; set; }
         public ServiceConfig IdentityService { get; set; }
         public ServiceConfig CommunicationService { get; set; }
+        public ServiceConfig PersonalService { get; set; }
     }
 
     public class ServiceConfig

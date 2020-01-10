@@ -17,7 +17,8 @@ namespace crm.migration
         private enum DBName
         {
             Contact = 0,
-            Identity = 1
+            Identity = 1,
+            Personal = 2
         }
 
         static async Task Main(string[] args)
@@ -40,6 +41,12 @@ namespace crm.migration
                 {
                     Log.Information("Run migration - Contact Db");
                     Run(DBName.Contact);
+                    continue;
+                }
+                if (IsArg(args[lastArg], "personal"))
+                {
+                    Log.Information("Run migration - Personal Db");
+                    Run(DBName.Personal);
                     continue;
                 }
                 if (IsArg(args[lastArg], "identity"))

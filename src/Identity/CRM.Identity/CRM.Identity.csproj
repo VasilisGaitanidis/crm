@@ -24,7 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\CRM.Shared\CRM.Shared.csproj" />
-    <ProjectReference Include="..\..\BuildingBlocks\CRM.Tracing.Jaeger\CRM.Tracing.Jaeger.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\CRM.OpenTelemetry\CRM.OpenTelemetry.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\CRM.Metrics\CRM.Metrics.csproj" />
   </ItemGroup>
   <ItemGroup>

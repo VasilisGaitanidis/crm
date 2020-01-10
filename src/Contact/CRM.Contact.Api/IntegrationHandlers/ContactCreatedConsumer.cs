@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using CRM.IntegrationEvents;
+using CRM.Contact.IntegrationEvents;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
