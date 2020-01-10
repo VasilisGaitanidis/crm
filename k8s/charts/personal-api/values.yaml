@@ -1,0 +1,47 @@
+# Default values for personal-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: s5enow/personal-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "personal-api"
+
+service:
+  type: ClusterIP
+  port: 5003
+  grpcPort: 15003
+
+ingress:
+  enabled: false
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+env:
+  values:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: Development
+    - name: rabbitMQ__Url
+      value: amqp://rabbitmq
+    - name: ConnectionStrings__personal
+      value: Server=postgresql;Port=5432;Database=crm-personal;User Id=lab;Password=P@ssw0rd;
+    - name: OpenTelemetry_Enabled
+      value: false
+    - name: Logging__Seq__Enabled
+      value: true
+    - name: Logging__Seq__Url
+      value: http://seq.monitoring.svc.cluster.local:5341/
+    - name: Logging__Seq__ApiKey
+      value: 11zWlcFxJYXUFqKXoKGK
