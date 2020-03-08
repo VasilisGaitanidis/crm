@@ -1,0 +1,4 @@
+config:
+  azure-setup:resouceGroup: abc
+  azure-setup:environment: public
+  azure-setup:location: WestUS
